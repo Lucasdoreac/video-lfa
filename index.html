@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #0d1117; --panel: #161b22; --ink: #e6edf3; --muted: #8b949e;
+        --sim: #3fb950; --nao: #f85149; --duvida: #d29922; --accent: #58a6ff;
+        --font-display: "Helvetica Neue", Arial, sans-serif; --font-mono: "SF Mono", Menlo, monospace;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ground); color: var(--ink); font-family: var(--font-display); }
+      #root { position: relative; width: 1920px; height: 1080px; }
+      .clip { position: absolute; inset: 0; }
+      .cena { opacity: 1; }
+      .corpo { position: absolute; top: 110px; left: 0; right: 0; height: 690px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      h1 { font-size: 92px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+      h2 { font-size: 60px; font-weight: 650; letter-spacing: -0.02em; }
+      .sub { font-size: 36px; color: var(--muted); margin-top: 28px; }
+      .bubble { width: 1080px; padding: 44px 52px; border-radius: 28px; background: #1f6feb22; border: 2px solid var(--accent); font-size: 44px; line-height: 1.35; text-align: left; }
+      .linhas { display: flex; flex-direction: column; align-items: center; margin-top: 30px; }
+      .row { display: flex; align-items: center; justify-content: space-between; width: 1300px; padding: 24px 34px; margin: 10px 0; background: var(--panel); border-radius: 18px; font-size: 38px; }
+      .badge { font-family: var(--font-mono); font-size: 32px; font-weight: 700; padding: 8px 24px; border-radius: 12px; min-width: 150px; text-align: center; }
+      .sim { background: var(--sim); color: #04260f; }
+      .nao { background: var(--nao); color: #2d0503; }
+      .off { background: #30363d; color: var(--muted); }
+      .node { position: absolute; width: 440px; padding: 24px 28px; border-radius: 18px; background: var(--panel); border: 2px solid #30363d; font-size: 34px; text-align: center; }
+      .node small { display: block; font-family: var(--font-mono); font-size: 24px; color: var(--muted); margin-top: 8px; }
+      .node.fato { border-color: var(--accent); } .node.regra { border-color: #a371f7; } .node.objetivo { border-color: var(--sim); } .node.indef { border-color: var(--duvida); }
+      svg.links { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+      svg.links line { stroke: #6e7681; stroke-width: 4; }
+      .arq { position: absolute; top: 40px; left: 0; right: 0; text-align: center; font-family: var(--font-mono); font-size: 26px; color: var(--accent); }
+      .codigo { width: 1760px; max-height: 640px; overflow: hidden; background: var(--panel); border-radius: 18px; padding: 26px 30px; font-family: var(--font-mono); font-size: 24px; line-height: 1.5; text-align: left; border: 2px solid #30363d; }
+      .cl { white-space: pre-wrap; word-break: break-word; padding-left: 0; color: #c9d1d9; }
+      .cl .ln { display: inline-block; width: 70px; color: #6e7681; }
+      .testes { display: flex; flex-direction: column; align-items: flex-start; margin-top: 30px; }
+      .test { font-family: var(--font-mono); font-size: 32px; margin: 8px 0; color: var(--sim); }
+      .cartoes { display: flex; gap: 40px; }
+      .arvore { display: flex; flex-direction: column; align-items: center; }
+      .arvore .node { position: relative; width: 560px; padding: 14px 24px; font-size: 30px; }
+      .arvore .node small { margin-top: 4px; font-size: 22px; }
+      .seta { width: 4px; height: 18px; background: #6e7681; }
+      .fatos { display: flex; gap: 60px; margin-top: 10px; }
+      .fatos .node { width: 440px; padding: 14px 20px; font-size: 28px; }
+      .cartao { width: 500px; height: 340px; padding: 40px; border-radius: 20px; background: var(--panel); text-align: left; display: flex; flex-direction: column; justify-content: center; }
+      .cartao p { font-size: 34px; color: var(--muted); margin-top: 24px; line-height: 1.45; }
+      .legenda { position: absolute; left: 150px; right: 150px; bottom: 50px; height: 170px; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 34px; line-height: 1.4; color: var(--ink); background: rgba(13,17,23,0.92); border-radius: 18px; padding: 22px 36px; border: 1px solid #30363d; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="136.7" data-width="1920" data-height="1080">
+      <section id="cena-0" class="clip cena" data-start="0.0" data-duration="12.8" data-track-index="0" data-n="0">
+        
+        <div class="corpo"><h1 class="rv" data-r="0">Triagem de mensagens suspeitas</h1>
+        <div class="sub rv" data-r="1">Golpes digitais: o sistema pergunta, infere e explica</div></div>
+        <div class="legenda" id="leg-0">Oi, pessoal. Nosso projeto de Linguagens Formais e Autômatos é um sistema especialista para triagem de mensagens suspeitas: golpes que pedem senha ou Pix.</div>
+      </section>
+      <section id="cena-1" class="clip cena" data-start="12.8" data-duration="10.4" data-track-index="1" data-n="1">
+        
+        <div class="corpo"><div class="bubble rv" data-r="0">Sua conta será bloqueada hoje. Confirme sua senha e o código que enviamos agora.</div>
+        <div class="sub rv" data-r="1">O sistema não sabe nada ainda. Ele precisa perguntar.</div></div>
+        <div class="legenda" id="leg-1">Imagine uma mensagem dizendo que a conta vai ser bloqueada hoje e pedindo a senha. O sistema não sabe nada sobre ela. Então ele precisa perguntar.</div>
+      </section>
+      <section id="cena-2" class="clip cena" data-start="23.2" data-duration="15.5" data-track-index="2" data-n="2">
+        <div class="arq">base.py · linhas 14–20</div>
+        <div class="corpo"><div class="codigo" data-n="7"><div class="cl" data-k="0"><span class="ln">14</span>    {</div><div class="cl" data-k="1"><span class="ln">15</span>        &quot;id&quot;: &quot;R1&quot;,</div><div class="cl" data-k="2"><span class="ln">16</span>        &quot;se&quot;: [(&quot;pede_senha_ou_codigo&quot;, &quot;sim&quot;), (&quot;nao_solicitado&quot;, &quot;sim&quot;)],</div><div class="cl" data-k="3"><span class="ln">17</span>        &quot;entao&quot;: (&quot;phishing&quot;, &quot;sim&quot;),</div><div class="cl" data-k="4"><span class="ln">18</span>        &quot;fonte&quot;: &quot;CERT.br, Cartilha de Segurança para Internet, fascículo Phishing e Outros Golpes (2022); confirmar no PDF oficial&quot;,</div><div class="cl" data-k="5"><span class="ln">19</span>        &quot;estado&quot;: &quot;sem validação&quot;,</div><div class="cl" data-k="6"><span class="ln">20</span>    },</div></div></div>
+        <div class="legenda" id="leg-2">Primeiro, a base de conhecimento. Ela guarda só dados: cada regra tem premissas, uma conclusão e uma fonte. Esta é a R1: se a mensagem pede senha e o contato não foi solicitado, é phishing.</div>
+      </section>
+      <section id="cena-3" class="clip cena" data-start="38.7" data-duration="9.6" data-track-index="3" data-n="3">
+        
+        <div class="corpo"><h2 class="rv" data-r="0">Perguntas: só o que a regra precisa</h2>
+<div class="linhas"><div class="row rv" data-r="0"><span>A mensagem pede senha, token ou código?</span><span class="badge sim">sim</span></div>
+<div class="row rv" data-r="1"><span>Você não pediu este contato?</span><span class="badge sim">sim</span></div>
+<div class="row rv" data-r="2"><span>Há link que não confere com o site oficial?</span><span class="badge off">não perguntado</span></div>
+<div class="row rv" data-r="3"><span>A mensagem exige ação imediata?</span><span class="badge off">não perguntado</span></div>
+<div class="row rv" data-r="4"><span>A mensagem pede transferência ou Pix?</span><span class="badge off">não perguntado</span></div>
+</div></div>
+        <div class="legenda" id="leg-3">Agora o sistema pergunta só o que a regra precisa. Aqui, duas respostas bastam. As outras três perguntas nem são feitas.</div>
+      </section>
+      <section id="cena-4" class="clip cena" data-start="48.3" data-duration="9.8" data-track-index="4" data-n="4">
+        <div class="arq">motor.py · linhas 41–52</div>
+        <div class="corpo"><div class="codigo" data-n="12"><div class="cl" data-k="0"><span class="ln">41</span>def _avaliar_regra(regra, base, respostas, perguntar, rastro, caminho, objetivo):</div><div class="cl" data-k="1"><span class="ln">42</span>    resultado_regra = VERDADEIRA</div><div class="cl" data-k="2"><span class="ln">43</span>    for nome, valor_esperado in regra[&quot;se&quot;]:</div><div class="cl" data-k="3"><span class="ln">44</span>        if nome in base[&quot;FATOS&quot;]:</div><div class="cl" data-k="4"><span class="ln">45</span>            v = _valor_de_fato(nome, valor_esperado, base, respostas, perguntar, rastro, objetivo, regra[&quot;id&quot;])</div><div class="cl" data-k="5"><span class="ln">46</span>        else:</div><div class="cl" data-k="6"><span class="ln">47</span>            v = _valor_de_objetivo(nome, valor_esperado, base, respostas, perguntar, rastro, caminho, objetivo, regra[&quot;id&quot;])</div><div class="cl" data-k="7"><span class="ln">48</span>        if v == FALSA:</div><div class="cl" data-k="8"><span class="ln">49</span>            return FALSA  # curto-circuito: as demais premissas não são perguntadas</div><div class="cl" data-k="9"><span class="ln">50</span>        if v == INDETERMINADA:</div><div class="cl" data-k="10"><span class="ln">51</span>            resultado_regra = INDETERMINADA</div><div class="cl" data-k="11"><span class="ln">52</span>    return resultado_regra</div></div></div>
+        <div class="legenda" id="leg-4">O motor avalia as premissas da esquerda para a direita. Se uma for falsa, ele para ali: a regra é falsa e nada mais é perguntado.</div>
+      </section>
+      <section id="cena-5" class="clip cena" data-start="58.1" data-duration="14.3" data-track-index="5" data-n="5">
+        
+        <div class="corpo"><div class="arvore">
+          <div class="node objetivo rv" data-r="0">acao<small>nao_informar_dados</small></div>
+          <div class="seta rv" data-r="1"></div>
+          <div class="node regra rv" data-r="1">R4 · SE phishing = sim<small>ENTÃO acao</small></div>
+          <div class="seta rv" data-r="2"></div>
+          <div class="node objetivo rv" data-r="2">phishing<small>objetivo intermediário</small></div>
+          <div class="seta rv" data-r="3"></div>
+          <div class="node regra rv" data-r="3">R1 · SE senha = sim E nao_solicitado = sim<small>ENTÃO phishing</small></div>
+          <div class="fatos">
+            <div class="node fato rv" data-r="4">pede_senha_ou_codigo<small>sim</small></div>
+            <div class="node fato rv" data-r="4">nao_solicitado<small>sim</small></div>
+          </div>
+        </div></div>
+        <div class="legenda" id="leg-5">A inferência é para trás. Parte da ação recomendada, acha a regra que a conclui e busca os fatos que a sustentam. A ação exige phishing; phishing exige a R1 e os dois fatos dela.</div>
+      </section>
+      <section id="cena-6" class="clip cena" data-start="72.4" data-duration="10.4" data-track-index="6" data-n="6">
+        <div class="arq">motor.py · linhas 55–70</div>
+        <div class="corpo"><div class="codigo" data-n="16"><div class="cl" data-k="0"><span class="ln">55</span>def _provar(objetivo, base, respostas, perguntar, rastro, caminho):</div><div class="cl" data-k="1"><span class="ln">56</span>    if objetivo in caminho:</div><div class="cl" data-k="2"><span class="ln">57</span>        rastro.append({&quot;objetivo&quot;: objetivo, &quot;regra&quot;: None, &quot;premissa&quot;: None,</div><div class="cl" data-k="3"><span class="ln">58</span>                       &quot;valor&quot;: &quot;ciclo&quot;, &quot;conclusao&quot;: INCONCLUSIVA})</div><div class="cl" data-k="4"><span class="ln">59</span>        return INCONCLUSIVA, rastro</div><div class="cl" data-k="5"><span class="ln">60</span>    regras = _regras_que_concluem(objetivo, base)</div><div class="cl" data-k="6"><span class="ln">61</span>    if not regras:</div><div class="cl" data-k="7"><span class="ln">62</span>        return INCONCLUSIVA, rastro</div><div class="cl" data-k="8"><span class="ln">63</span>    novo_caminho = caminho + (objetivo,)</div><div class="cl" data-k="9"><span class="ln">64</span>    todas_falsas = True</div><div class="cl" data-k="10"><span class="ln">65</span>    for regra in regras:</div><div class="cl" data-k="11"><span class="ln">66</span>        valor = _avaliar_regra(regra, base, respostas, perguntar, rastro, novo_caminho, objetivo)</div><div class="cl" data-k="12"><span class="ln">67</span>        if valor == VERDADEIRA:</div><div class="cl" data-k="13"><span class="ln">68</span>            return CONFIRMADA, rastro</div><div class="cl" data-k="14"><span class="ln">69</span>        if valor != FALSA:</div><div class="cl" data-k="15"><span class="ln">70</span>            todas_falsas = False</div></div></div>
+        <div class="legenda" id="leg-6">Quando uma premissa é outra hipótese, o motor prova essa hipótese antes. Se o objetivo já está na cadeia, o ciclo para e o resultado é inconclusivo.</div>
+      </section>
+      <section id="cena-7" class="clip cena" data-start="82.8" data-duration="12.3" data-track-index="7" data-n="7">
+        
+        <div class="corpo"><div class="arvore">
+          <div class="node objetivo indef rv" data-r="0">acao<small>inconclusiva</small></div>
+          <div class="seta rv" data-r="1"></div>
+          <div class="node regra indef rv" data-r="1">R1 · indeterminada<small>nao_solicitado = ?</small></div>
+          <div class="seta rv" data-r="2"></div>
+          <div class="node objetivo indef rv" data-r="2">phishing<small>inconclusiva</small></div>
+          <div class="fatos">
+            <div class="node fato rv" data-r="3">pede_senha_ou_codigo<small>sim</small></div>
+            <div class="node fato indef rv" data-r="3">nao_solicitado<small>? desconhecido</small></div>
+          </div>
+        </div></div>
+        <div class="legenda" id="leg-7">Agora, um caso sem resposta suficiente. Uma das respostas é interrogação. Desconhecido não vira não: a regra fica indeterminada e a ação fica inconclusiva.</div>
+      </section>
+      <section id="cena-8" class="clip cena" data-start="95.1" data-duration="8.9" data-track-index="0" data-n="8">
+        <div class="arq">cli.py · linhas 27–31</div>
+        <div class="corpo"><div class="codigo" data-n="5"><div class="cl" data-k="0"><span class="ln">27</span>def explicar(estado, rastro):</div><div class="cl" data-k="1"><span class="ln">28</span>    for linha in rastro:</div><div class="cl" data-k="2"><span class="ln">29</span>        if linha[&quot;regra&quot;] is None:</div><div class="cl" data-k="3"><span class="ln">30</span>            continue</div><div class="cl" data-k="4"><span class="ln">31</span>        print(f&quot;  {linha[&#x27;regra&#x27;]}: {linha[&#x27;premissa&#x27;]} = {linha[&#x27;valor&#x27;]} -&gt; {linha[&#x27;conclusao&#x27;]}&quot;)</div></div></div>
+        <div class="legenda" id="leg-8">A explicação mostra cada regra usada, o fato e o valor encontrado. Quem usa vê o caminho inteiro, e não só o resultado.</div>
+      </section>
+      <section id="cena-9" class="clip cena" data-start="104.0" data-duration="11.1" data-track-index="1" data-n="9">
+        <div class="arq">test_motor.py · linhas 41–45</div>
+        <div class="corpo"><div class="codigo" data-n="5"><div class="cl" data-k="0"><span class="ln">41</span>    def test_T2_resposta_desconhecida_nao_vira_nao(self):</div><div class="cl" data-k="1"><span class="ln">42</span>        espiao = Espiao({&quot;pede_senha_ou_codigo&quot;: &quot;sim&quot;, &quot;nao_solicitado&quot;: &quot;?&quot;})</div><div class="cl" data-k="2"><span class="ln">43</span>        estado, _ = provar(&quot;phishing&quot;, base_real(), {}, espiao)</div><div class="cl" data-k="3"><span class="ln">44</span>        self.assertEqual(estado, INCONCLUSIVA)</div><div class="cl" data-k="4"><span class="ln">45</span>        self.assertNotEqual(estado, REFUTADA)</div></div></div>
+        <div class="legenda" id="leg-9">Os quinze testes automatizados cobrem isso: a resposta desconhecida, o ciclo, o fato repetido e a entrada inválida. Todos passam.</div>
+      </section>
+      <section id="cena-10" class="clip cena" data-start="115.1" data-duration="14.4" data-track-index="2" data-n="10">
+        
+        <div class="corpo"><div class="cartoes"><div class="cartao rv" data-r="0"><h2 style="color:var(--accent)">Regras</h2><p>5 regras SE-ENTÃO, cada uma com fonte citada</p></div><div class="cartao rv" data-r="1"><h2 style="color:var(--sim)">Inferência</h2><p>Parte da ação e busca, para trás, só os fatos que a provam</p></div><div class="cartao rv" data-r="2"><h2 style="color:var(--duvida)">Explicação</h2><p>Mostra o rastro de cada regra e o fato que falta quando a resposta é &#x27;?&#x27;</p></div></div></div>
+        <div class="legenda" id="leg-10">O sistema tem cinco regras SE-ENTÃO, cada uma com fonte. Faz inferência para trás e explica o caminho. É um protótipo didático: cobre os casos que as regras descrevem, e não todos os golpes possíveis.</div>
+      </section>
+      <section id="cena-11" class="clip cena" data-start="129.5" data-duration="7.2" data-track-index="3" data-n="11">
+        
+        <div class="corpo"><h1 class="rv" data-r="0" style="font-size:64px">Triagem de mensagens suspeitas</h1>
+        <div class="sub rv" data-r="1">Protótipo didático de triagem de mensagens suspeitas.</div>
+        <div class="sub rv" data-r="2" style="font-size:28px; margin-top:44px">Fontes: CERT.br · Febraban · Banco Central</div></div>
+        <div class="legenda" id="leg-11">Obrigado. Fontes: CERT.br, Febraban e Banco Central.</div>
+      </section>
+<audio id="ambiente" src="assets/ambiente-v2.wav" data-start="0" data-duration="136.7" data-volume="0.35" data-fade-in="2" data-fade-out="3"></audio>
+<audio id="narracao-0" src="assets/narracao-01.wav" data-start="0.3" data-duration="12.02" data-volume="1"></audio>
+<audio id="efeito-0" src="assets/whoosh-v2.wav" data-start="0.0" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-1" src="assets/narracao-02.wav" data-start="13.1" data-duration="9.65" data-volume="1"></audio>
+<audio id="efeito-1" src="assets/whoosh-v2.wav" data-start="12.8" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-2" src="assets/narracao-03.wav" data-start="23.5" data-duration="14.71" data-volume="1"></audio>
+<audio id="efeito-2" src="assets/clique-v2.wav" data-start="23.2" data-duration="0.12" data-volume="0.5"></audio>
+<audio id="narracao-3" src="assets/narracao-04.wav" data-start="39.0" data-duration="8.77" data-volume="1"></audio>
+<audio id="efeito-3" src="assets/whoosh-v2.wav" data-start="38.7" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-4" src="assets/narracao-05.wav" data-start="48.6" data-duration="9.03" data-volume="1"></audio>
+<audio id="efeito-4" src="assets/clique-v2.wav" data-start="48.3" data-duration="0.12" data-volume="0.5"></audio>
+<audio id="narracao-5" src="assets/narracao-06.wav" data-start="58.4" data-duration="13.53" data-volume="1"></audio>
+<audio id="efeito-5" src="assets/whoosh-v2.wav" data-start="58.1" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-6" src="assets/narracao-07.wav" data-start="72.7" data-duration="9.58" data-volume="1"></audio>
+<audio id="efeito-6" src="assets/clique-v2.wav" data-start="72.4" data-duration="0.12" data-volume="0.5"></audio>
+<audio id="narracao-7" src="assets/narracao-08.wav" data-start="83.1" data-duration="11.55" data-volume="1"></audio>
+<audio id="efeito-7" src="assets/whoosh-v2.wav" data-start="82.8" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-8" src="assets/narracao-09.wav" data-start="95.4" data-duration="8.05" data-volume="1"></audio>
+<audio id="efeito-8" src="assets/clique-v2.wav" data-start="95.1" data-duration="0.12" data-volume="0.5"></audio>
+<audio id="narracao-9" src="assets/narracao-10.wav" data-start="104.3" data-duration="10.31" data-volume="1"></audio>
+<audio id="efeito-9" src="assets/clique-v2.wav" data-start="104.0" data-duration="0.12" data-volume="0.5"></audio>
+<audio id="narracao-10" src="assets/narracao-11.wav" data-start="115.4" data-duration="13.64" data-volume="1"></audio>
+<audio id="efeito-10" src="assets/whoosh-v2.wav" data-start="115.1" data-duration="1.40" data-volume="0.5"></audio>
+<audio id="narracao-11" src="assets/narracao-12.wav" data-start="129.8" data-duration="6.37" data-volume="1"></audio>
+<audio id="efeito-11" src="assets/whoosh-v2.wav" data-start="129.5" data-duration="1.40" data-volume="0.5"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      document.querySelectorAll("section.cena").forEach((sec) => {
+        const ini = parseFloat(sec.dataset.start);
+        const dur = parseFloat(sec.dataset.duration);
+        const reveals = sec.querySelectorAll(".rv");
+        const passo = Math.min(0.9, Math.max(0.25, (dur - 1.6) / Math.max(1, reveals.length)));
+        reveals.forEach((el) => {
+          const r = parseFloat(el.dataset.r || "0");
+          tl.fromTo(el, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, ini + 0.3 + r * passo);
+        });
+        const linhas = sec.querySelectorAll(".cl");
+        if (linhas.length) {
+          const pl = Math.min(0.55, Math.max(0.12, (dur - 1.6) / linhas.length));
+          linhas.forEach((el) => {
+            tl.fromTo(el, { opacity: 0.15 }, { opacity: 1, duration: 0.25 }, ini + 0.3 + parseFloat(el.dataset.k) * pl);
+          });
+        }
+        tl.fromTo(sec.querySelector(".legenda"), { opacity: 0 }, { opacity: 1, duration: 0.4 }, ini + 0.1);
+        tl.to(sec, { opacity: 1, duration: 0.01 }, ini);
+      });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+</script>
+  </body>
+</html>
